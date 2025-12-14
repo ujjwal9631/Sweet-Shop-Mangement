@@ -24,7 +24,6 @@ com\sweetshop\entity\User$UserBuilder.class
 com\sweetshop\dto\LoginRequest$LoginRequestBuilder.class
 com\sweetshop\dto\PaginationDto.class
 com\sweetshop\dto\SweetResponse$SweetResponseBuilder.class
-com\sweetshop\config\Hello.class
 com\sweetshop\entity\Sweet$Category.class
 com\sweetshop\dto\SweetListResponse$SweetListResponseBuilder.class
 com\sweetshop\dto\QuantityRequest$QuantityRequestBuilder.class
