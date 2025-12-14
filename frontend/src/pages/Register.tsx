@@ -1,39 +1,40 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { UserPlus, Mail, Lock, User, AlertCircle, Shield } from 'lucide-react';
-import toast from 'react-hot-toast';
-import './Auth.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { UserPlus, Mail, Lock, User, AlertCircle, Shield } from "lucide-react";
+import toast from "react-hot-toast";
+import "./Auth.css";
 
 const Register: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [isAdmin, setIsAdmin] = useState(false);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await register(email, password, name, isAdmin ? 'admin' : 'user');
-      toast.success('Account created successfully!');
-      navigate('/dashboard');
+      await register(email, password, name, "user");
+      toast.success("Account created successfully! Please login.");
+      navigate("/login");
     } catch (err: any) {
-      const message = err.response?.data?.message || 'Registration failed. Please try again.';
+      const message =
+        err.response?.data?.message || "Registration failed. Please try again.";
       setError(message);
       toast.error(message);
     } finally {
@@ -124,7 +125,7 @@ const Register: React.FC = () => {
             />
           </div>
 
-          <div className="form-group checkbox-group">
+          {/* <div className="form-group checkbox-group">
             <label className="checkbox-label">
               <input
                 type="checkbox"
@@ -134,21 +135,20 @@ const Register: React.FC = () => {
               <Shield size={16} />
               <span>Register as Admin (for demo purposes)</span>
             </label>
-          </div>
+          </div> */}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn btn-primary btn-block"
             disabled={isLoading}
           >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            Already have an account?{' '}
-            <Link to="/login">Sign in</Link>
+            Already have an account? <Link to="/login">Sign in</Link>
           </p>
         </div>
       </div>
