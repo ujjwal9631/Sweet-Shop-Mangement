@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CATEGORIES, CreateSweetData } from '../types';
-import apiService from '../services/api';
-import { Plus, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
-import './SweetForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CATEGORIES, CreateSweetData } from "../types";
+import apiService from "../services/api";
+import { Plus, ArrowLeft } from "lucide-react";
+import toast from "react-hot-toast";
+import "./SweetForm.css";
 
 const AddSweet: React.FC = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<CreateSweetData>({
-    name: '',
-    category: 'Chocolate',
+    name: "",
+    category: "Chocolate",
     price: 0,
     quantity: 0,
-    description: '',
-    imageUrl: ''
+    description: "",
+    imageUrl: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'price' || name === 'quantity' ? parseFloat(value) || 0 : value
+      [name]:
+        name === "price" || name === "quantity"
+          ? parseFloat(value) || 0
+          : value,
     }));
   };
 
@@ -32,10 +39,10 @@ const AddSweet: React.FC = () => {
 
     try {
       await apiService.createSweet(formData);
-      toast.success('Sweet created successfully!');
-      navigate('/dashboard');
+      toast.success("Sweet created successfully!");
+      navigate("/dashboard");
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to create sweet';
+      const message = error.response?.data?.message || "Failed to create sweet";
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -79,25 +86,26 @@ const AddSweet: React.FC = () => {
                 value={formData.category}
                 onChange={handleChange}
                 className="form-select"
+                aria-label="Sweet category"
                 required
               >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Price ($) *</label>
+              <label className="form-label">Price (₹)*</label>
               <input
                 type="number"
                 name="price"
-                value={formData.price}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="0.00"
+                placeholder="0"
                 min="0"
-                step="0.01"
                 required
               />
             </div>
@@ -108,7 +116,6 @@ const AddSweet: React.FC = () => {
             <input
               type="number"
               name="quantity"
-              value={formData.quantity}
               onChange={handleChange}
               className="form-input"
               placeholder="0"
@@ -154,7 +161,7 @@ const AddSweet: React.FC = () => {
               className="btn btn-primary"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating...' : 'Create Sweet'}
+              {isSubmitting ? "Creating..." : "Create Sweet"}
             </button>
           </div>
         </form>

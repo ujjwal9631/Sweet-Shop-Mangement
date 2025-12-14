@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Search, Filter, X } from 'lucide-react';
-import { CATEGORIES } from '../types';
-import './SearchFilter.css';
+import React, { useState } from "react";
+import { Search, Filter, X } from "lucide-react";
+import { CATEGORIES } from "../types";
+import "./SearchFilter.css";
 
 interface SearchFilterProps {
   onSearch: (params: {
@@ -13,10 +13,10 @@ interface SearchFilterProps {
 }
 
 const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch }) => {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,15 +25,15 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch }) => {
       name: name || undefined,
       category: category || undefined,
       minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined
+      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
     });
   };
 
   const handleClear = () => {
-    setName('');
-    setCategory('');
-    setMinPrice('');
-    setMaxPrice('');
+    setName("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
     onSearch({});
   };
 
@@ -55,7 +55,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch }) => {
 
         <button
           type="button"
-          className={`btn btn-outline filter-toggle ${showFilters ? 'active' : ''}`}
+          className={`btn btn-outline filter-toggle ${
+            showFilters ? "active" : ""
+          }`}
           onClick={() => setShowFilters(!showFilters)}
         >
           <Filter size={18} />
@@ -67,7 +69,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch }) => {
         </button>
 
         {hasFilters && (
-          <button type="button" className="btn btn-secondary" onClick={handleClear}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleClear}
+          >
             <X size={18} />
             Clear
           </button>
@@ -85,7 +91,9 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onSearch }) => {
             >
               <option value="">All Categories</option>
               {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
           </div>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { CATEGORIES, UpdateSweetData, Sweet } from '../types';
-import apiService from '../services/api';
-import { Edit, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
-import './SweetForm.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { CATEGORIES, UpdateSweetData } from "../types";
+import apiService from "../services/api";
+import { Edit, ArrowLeft } from "lucide-react";
+import toast from "react-hot-toast";
+import "./SweetForm.css";
 
 const EditSweet: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,31 +12,31 @@ const EditSweet: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<UpdateSweetData>({
-    name: '',
-    category: 'Chocolate',
+    name: "",
+    category: "Chocolate",
     price: 0,
     quantity: 0,
-    description: '',
-    imageUrl: ''
+    description: "",
+    imageUrl: "",
   });
 
   useEffect(() => {
     const fetchSweet = async () => {
       if (!id) return;
       try {
-        const response = await apiService.getSweetById(id);
+        const response = await apiService.getSweetById(parseInt(id));
         const sweet = response.sweet;
         setFormData({
           name: sweet.name,
           category: sweet.category,
           price: sweet.price,
           quantity: sweet.quantity,
-          description: sweet.description || '',
-          imageUrl: sweet.imageUrl || ''
+          description: sweet.description || "",
+          imageUrl: sweet.imageUrl || "",
         });
       } catch (error) {
-        toast.error('Failed to load sweet');
-        navigate('/dashboard');
+        toast.error("Failed to load sweet");
+        navigate("/dashboard");
       } finally {
         setIsLoading(false);
       }
@@ -45,11 +45,16 @@ const EditSweet: React.FC = () => {
     fetchSweet();
   }, [id, navigate]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'price' || name === 'quantity' ? parseFloat(value) || 0 : value
+      [name]:
+        name === "price" || name === "quantity" ? parseFloat(value) : value,
     }));
   };
 
@@ -59,11 +64,11 @@ const EditSweet: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await apiService.updateSweet(id, formData);
-      toast.success('Sweet updated successfully!');
+      await apiService.updateSweet(parseInt(id), formData);
+      toast.success("Sweet updated successfully!");
       navigate(`/sweets/${id}`);
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to update sweet';
+      const message = error.response?.data?.message || "Failed to update sweet";
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -118,23 +123,24 @@ const EditSweet: React.FC = () => {
                 className="form-select"
                 required
               >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Price ($) *</label>
+              <label className="form-label">Price (₹) *</label>
               <input
                 type="number"
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="0.00"
+                placeholder="0"
                 min="0"
-                step="0.01"
                 required
               />
             </div>
@@ -191,7 +197,7 @@ const EditSweet: React.FC = () => {
               className="btn btn-primary"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

@@ -23,7 +23,11 @@
 .auth-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border-radius: 1rem;
   display: flex;
   align-items: center;

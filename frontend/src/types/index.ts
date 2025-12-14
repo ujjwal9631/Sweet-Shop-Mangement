@@ -1,13 +1,13 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
   name: string;
-  role: 'user' | 'admin';
+  role: "user" | "admin";
   createdAt?: string;
 }
 
 export interface Sweet {
-  _id: string;
+  id: number;
   name: string;
   category: string;
   price: number;
@@ -78,14 +78,29 @@ export interface UpdateSweetData {
   imageUrl?: string;
 }
 
-export const CATEGORIES = [
-  'Chocolate',
-  'Candy',
-  'Cake',
-  'Cookie',
-  'Pastry',
-  'Ice Cream',
-  'Other'
+ export const CATEGORIES = [
+   "Chocolate",
+   "Candy",
+   "Cake",
+   "Cookie",
+   "Pastry",
+   "Ice Cream",
+   "Ladoo",
+   "Barfi",
+   "Halwa",
+   "Rasgulla",
+   "Gulab Jamun",
+   "Kheer",
+   "Peda",
+   "Jalebi",
+   "Bengali Sweets",
+   "Dry Sweets",
+   "Milk Sweets",
+   "Namkeen",
+   "Beverages",
+   "Bakery",
+   "Snacks",
+   "Other",
 ] as const;
 
-export type Category = typeof CATEGORIES[number];
+export type Category = (typeof CATEGORIES)[number];

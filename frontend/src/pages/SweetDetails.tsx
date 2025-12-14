@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Sweet } from '../types';
-import apiService from '../services/api';
-import { useAuth } from '../context/AuthContext';
-import { 
-  ArrowLeft, 
-  ShoppingCart, 
-  Package, 
-  Edit, 
-  Trash2, 
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Sweet } from "../types";
+import apiService from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Package,
+  Edit,
+  Trash2,
   RefreshCw,
   Minus,
-  Plus
-} from 'lucide-react';
-import toast from 'react-hot-toast';
-import './SweetDetails.css';
+  Plus,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import "./SweetDetails.css";
 
 const SweetDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,11 +34,11 @@ const SweetDetails: React.FC = () => {
     const fetchSweet = async () => {
       if (!id) return;
       try {
-        const response = await apiService.getSweetById(id);
+        const response = await apiService.getSweetById(parseInt(id));
         setSweet(response.sweet);
       } catch (error) {
-        toast.error('Failed to load sweet details');
-        navigate('/dashboard');
+        toast.error("Failed to load sweet details");
+        navigate("/dashboard");
       } finally {
         setIsLoading(false);
       }
@@ -51,26 +51,30 @@ const SweetDetails: React.FC = () => {
     if (!sweet) return;
     setIsPurchasing(true);
     try {
-      const response = await apiService.purchaseSweet(sweet._id, quantity);
+      const response = await apiService.purchaseSweet(sweet.id, quantity);
       setSweet(response.sweet);
       toast.success(`Successfully purchased ${quantity} ${sweet.name}!`);
       setQuantity(1);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Purchase failed');
+      toast.error(error.response?.data?.message || "Purchase failed");
     } finally {
       setIsPurchasing(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!sweet || !window.confirm('Are you sure you want to delete this sweet?')) return;
+    if (
+      !sweet ||
+      !window.confirm("Are you sure you want to delete this sweet?")
+    )
+      return;
     setIsDeleting(true);
     try {
-      await apiService.deleteSweet(sweet._id);
-      toast.success('Sweet deleted successfully');
-      navigate('/dashboard');
+      await apiService.deleteSweet(sweet.id);
+      toast.success("Sweet deleted successfully");
+      navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to delete sweet');
+      toast.error(error.response?.data?.message || "Failed to delete sweet");
     } finally {
       setIsDeleting(false);
     }
@@ -80,12 +84,12 @@ const SweetDetails: React.FC = () => {
     if (!sweet) return;
     setIsRestocking(true);
     try {
-      const response = await apiService.restockSweet(sweet._id, restockAmount);
+      const response = await apiService.restockSweet(sweet.id, restockAmount);
       setSweet(response.sweet);
       toast.success(`Added ${restockAmount} units to stock`);
       setShowRestockModal(false);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Restock failed');
+      toast.error(error.response?.data?.message || "Restock failed");
     } finally {
       setIsRestocking(false);
     }
@@ -93,15 +97,15 @@ const SweetDetails: React.FC = () => {
 
   const getCategoryEmoji = (category: string): string => {
     const emojis: { [key: string]: string } = {
-      'Chocolate': '🍫',
-      'Candy': '🍬',
-      'Cake': '🎂',
-      'Cookie': '🍪',
-      'Pastry': '🥐',
-      'Ice Cream': '🍦',
-      'Other': '🍭'
+      Chocolate: "🍫",
+      Candy: "🍬",
+      Cake: "🎂",
+      Cookie: "🍪",
+      Pastry: "🥐",
+      "Ice Cream": "🍦",
+      Other: "🍭",
     };
-    return emojis[category] || '🍭';
+    return emojis[category] || "🍭";
   };
 
   if (isLoading) {
@@ -117,7 +121,9 @@ const SweetDetails: React.FC = () => {
     return (
       <div className="not-found">
         <h2>Sweet not found</h2>
-        <Link to="/dashboard" className="btn btn-primary">Back to Dashboard</Link>
+        <Link to="/dashboard" className="btn btn-primary">
+          Back to Dashboard
+        </Link>
       </div>
     );
   }
@@ -136,7 +142,11 @@ const SweetDetails: React.FC = () => {
       <div className="sweet-details-grid">
         <div className="sweet-image-section">
           {sweet.imageUrl ? (
-            <img src={sweet.imageUrl} alt={sweet.name} className="sweet-image" />
+            <img
+              src={sweet.imageUrl}
+              alt={sweet.name}
+              className="sweet-image"
+            />
           ) : (
             <div className="sweet-image-placeholder">
               <span>{getCategoryEmoji(sweet.category)}</span>
@@ -147,18 +157,22 @@ const SweetDetails: React.FC = () => {
         <div className="sweet-info-section">
           <span className="sweet-category">{sweet.category}</span>
           <h1 className="sweet-name">{sweet.name}</h1>
-          
+
           {sweet.description && (
             <p className="sweet-description">{sweet.description}</p>
           )}
 
-          <div className="sweet-price">${sweet.price.toFixed(2)}</div>
+          <div className="sweet-price">₹{sweet.price.toFixed(2)}</div>
 
-          <div className={`stock-status ${isOutOfStock ? 'out' : isLowStock ? 'low' : 'in'}`}>
+          <div
+            className={`stock-status ${
+              isOutOfStock ? "out" : isLowStock ? "low" : "in"
+            }`}
+          >
             <Package size={20} />
             <span>
-              {isOutOfStock ? 'Out of Stock' : `${sweet.quantity} in stock`}
-              {isLowStock && ' (Low stock!)'}
+              {isOutOfStock ? "Out of Stock" : `${sweet.quantity} in stock`}
+              {isLowStock && " (Low stock!)"}
             </span>
           </div>
 
@@ -167,7 +181,7 @@ const SweetDetails: React.FC = () => {
               <div className="quantity-selector">
                 <button
                   className="qty-btn"
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   disabled={quantity <= 1}
                 >
                   <Minus size={16} />
@@ -175,7 +189,9 @@ const SweetDetails: React.FC = () => {
                 <span className="qty-value">{quantity}</span>
                 <button
                   className="qty-btn"
-                  onClick={() => setQuantity(q => Math.min(maxPurchase, q + 1))}
+                  onClick={() =>
+                    setQuantity((q) => Math.min(maxPurchase, q + 1))
+                  }
                   disabled={quantity >= maxPurchase}
                 >
                   <Plus size={16} />
@@ -188,7 +204,9 @@ const SweetDetails: React.FC = () => {
                 disabled={isPurchasing}
               >
                 <ShoppingCart size={20} />
-                {isPurchasing ? 'Purchasing...' : `Purchase - $${(sweet.price * quantity).toFixed(2)}`}
+                {isPurchasing
+                  ? "Purchasing..."
+                  : `Purchase - ₹${(sweet.price * quantity).toFixed(2)}`}
               </button>
             </div>
           )}
@@ -197,7 +215,10 @@ const SweetDetails: React.FC = () => {
             <div className="admin-actions">
               <h3>Admin Actions</h3>
               <div className="admin-buttons">
-                <Link to={`/edit-sweet/${sweet._id}`} className="btn btn-outline">
+                <Link
+                  to={`/edit-sweet/${sweet.id}`}
+                  className="btn btn-outline"
+                >
                   <Edit size={18} />
                   Edit
                 </Link>
@@ -214,7 +235,7 @@ const SweetDetails: React.FC = () => {
                   disabled={isDeleting}
                 >
                   <Trash2 size={18} />
-                  {isDeleting ? 'Deleting...' : 'Delete'}
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
@@ -223,8 +244,11 @@ const SweetDetails: React.FC = () => {
       </div>
 
       {showRestockModal && (
-        <div className="modal-overlay" onClick={() => setShowRestockModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowRestockModal(false)}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Restock {sweet.name}</h3>
             <p>Current stock: {sweet.quantity}</p>
             <div className="form-group">
@@ -233,7 +257,9 @@ const SweetDetails: React.FC = () => {
                 type="number"
                 min="1"
                 value={restockAmount}
-                onChange={e => setRestockAmount(parseInt(e.target.value) || 0)}
+                onChange={(e) =>
+                  setRestockAmount(parseInt(e.target.value) || 0)
+                }
                 className="form-input"
               />
             </div>
@@ -249,7 +275,7 @@ const SweetDetails: React.FC = () => {
                 onClick={handleRestock}
                 disabled={isRestocking || restockAmount < 1}
               >
-                {isRestocking ? 'Restocking...' : `Add ${restockAmount} units`}
+                {isRestocking ? "Restocking..." : `Add ${restockAmount} units`}
               </button>
             </div>
           </div>

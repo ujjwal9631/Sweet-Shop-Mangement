@@ -1,8 +1,15 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Candy, LogOut, User, LayoutDashboard, Shield, Plus } from 'lucide-react';
-import './Navbar.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  Candy,
+  LogOut,
+  User,
+  LayoutDashboard,
+  Shield,
+  Plus,
+} from "lucide-react";
+import "./Navbar.css";
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -10,14 +17,15 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          <Candy className="brand-icon" />
+          {/* <IconCake /> */}
+          {/* <Candy className="brand-icon" /> */}
           <span>Sweet Shop</span>
         </Link>
 
@@ -27,11 +35,6 @@ const Navbar: React.FC = () => {
               <Link to="/dashboard" className="nav-link">
                 <LayoutDashboard size={18} />
                 <span>Dashboard</span>
-              </Link>
-              
-              <Link to="/add-sweet" className="nav-link">
-                <Plus size={18} />
-                <span>Add Sweet</span>
               </Link>
 
               {isAdmin && (
@@ -55,8 +58,12 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-link">Login</Link>
-              <Link to="/register" className="btn btn-primary">Get Started</Link>
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+              <Link to="/register" className="btn btn-primary">
+                Get Started
+              </Link>
             </>
           )}
         </div>

@@ -63,7 +63,11 @@
 
 .sweet-category {
   display: inline-block;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;

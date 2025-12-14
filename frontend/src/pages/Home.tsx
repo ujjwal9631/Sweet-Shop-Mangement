@@ -1,8 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Candy, ShoppingBag, Shield, Sparkles, ChevronRight } from 'lucide-react';
-import './Home.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  Candy,
+  ShoppingBag,
+  Shield,
+  Sparkles,
+  ChevronRight,
+} from "lucide-react";
+import "./Home.css";
 
 const Home: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -16,8 +22,8 @@ const Home: React.FC = () => {
             Welcome to <span className="gradient-text">Sweet Shop</span>
           </h1>
           <p className="hero-subtitle">
-            Discover the sweetest treats! From rich chocolates to delightful candies,
-            find everything to satisfy your sweet tooth.
+            Discover the sweetest treats! From rich chocolates to delightful
+            candies, find everything to satisfy your sweet tooth.
           </p>
           <div className="hero-actions">
             {isAuthenticated ? (
@@ -57,21 +63,30 @@ const Home: React.FC = () => {
               <Candy size={32} />
             </div>
             <h3>Wide Variety</h3>
-            <p>From chocolates to pastries, we have all your favorite sweets in one place.</p>
+            <p>
+              From chocolates to pastries, we have all your favorite sweets in
+              one place.
+            </p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">
               <ShoppingBag size={32} />
             </div>
             <h3>Easy Shopping</h3>
-            <p>Browse, search, and purchase your favorite treats with just a few clicks.</p>
+            <p>
+              Browse, search, and purchase your favorite treats with just a few
+              clicks.
+            </p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">
               <Shield size={32} />
             </div>
             <h3>Secure & Reliable</h3>
-            <p>Your account and transactions are protected with enterprise-grade security.</p>
+            <p>
+              Your account and transactions are protected with enterprise-grade
+              security.
+            </p>
           </div>
         </div>
       </section>
@@ -108,7 +123,6 @@ const Home: React.FC = () => {
 
       <footer className="home-footer">
         <p>🍬 Sweet Shop Management System - TDD Kata Project</p>
-        <p>Built with React, Node.js, Express, and MongoDB</p>
       </footer>
     </div>
   );
