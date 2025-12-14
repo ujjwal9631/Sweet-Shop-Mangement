@@ -1,17 +1,17 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import SweetDetails from './pages/SweetDetails';
-import AddSweet from './pages/AddSweet';
-import EditSweet from './pages/EditSweet';
-import AdminPanel from './pages/AdminPanel';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import SweetDetails from "./pages/SweetDetails";
+import EditSweet from "./pages/EditSweet";
+import AddSweet from "./pages/AddSweet";
+import AdminPanel from "./pages/AdminPanel";
 
 const App: React.FC = () => {
   return (
@@ -41,18 +41,18 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/add-sweet"
-                element={
-                  <ProtectedRoute>
-                    <AddSweet />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/edit-sweet/:id"
                 element={
                   <ProtectedRoute>
                     <EditSweet />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add-sweet"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AddSweet />
                   </ProtectedRoute>
                 }
               />
@@ -66,22 +66,22 @@ const App: React.FC = () => {
               />
             </Routes>
           </main>
-          <Toaster 
+          <Toaster
             position="top-right"
             toastOptions={{
               duration: 3000,
               style: {
-                background: '#363636',
-                color: '#fff',
+                background: "#363636",
+                color: "#fff",
               },
               success: {
                 style: {
-                  background: '#10b981',
+                  background: "#10b981",
                 },
               },
               error: {
                 style: {
-                  background: '#ef4444',
+                  background: "#ef4444",
                 },
               },
             }}

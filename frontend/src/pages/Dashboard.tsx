@@ -1,48 +1,61 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Sweet, SearchParams } from '../types';
-import apiService from '../services/api';
-import SweetCard from '../components/SweetCard';
-import SearchFilter from '../components/SearchFilter';
-import { useAuth } from '../context/AuthContext';
-import { Package, TrendingUp, AlertTriangle } from 'lucide-react';
-import toast from 'react-hot-toast';
-import './Dashboard.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Sweet, SearchParams } from "../types";
+import apiService from "../services/api";
+import SweetCard from "../components/SweetCard";
+import SearchFilter from "../components/SearchFilter";
+import { useAuth } from "../context/AuthContext";
+import { Package, TrendingUp, AlertTriangle, Plus } from "lucide-react";
+import toast from "react-hot-toast";
+import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [purchasingId, setPurchasingId] = useState<string | null>(null);
+  const [purchasingId, setPurchasingId] = useState<number | null>(null);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
     total: 0,
-    pages: 0
+    pages: 0,
   });
   const [searchParams, setSearchParams] = useState<SearchParams>({});
 
   const { user } = useAuth();
 
-  const fetchSweets = useCallback(async (params: SearchParams = {}) => {
-    setIsLoading(true);
-    try {
-      const hasSearchParams = params.name || params.category || params.minPrice || params.maxPrice;
-      
-      if (hasSearchParams) {
-        const response = await apiService.searchSweets({ ...params, page: pagination.page, limit: pagination.limit });
-        setSweets(response.sweets);
-        setPagination(response.pagination);
-      } else {
-        const response = await apiService.getAllSweets(pagination.page, pagination.limit);
-        setSweets(response.sweets);
-        setPagination(response.pagination);
+  const fetchSweets = useCallback(
+    async (params: SearchParams = {}) => {
+      setIsLoading(true);
+      try {
+        const hasSearchParams =
+          params.name || params.category || params.minPrice || params.maxPrice;
+
+        if (hasSearchParams) {
+          const response = await apiService.searchSweets({
+            ...params,
+            page: pagination.page,
+            limit: pagination.limit,
+          });
+          setSweets(response.sweets);
+          setPagination(response.pagination);
+        } else {
+          const response = await apiService.getAllSweets(
+            pagination.page,
+            pagination.limit
+          );
+          setSweets(response.sweets);
+          setPagination(response.pagination);
+        }
+      } catch (error) {
+        console.error("Failed to fetch sweets:", error);
+        toast.error("Failed to load sweets");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to fetch sweets:', error);
-      toast.error('Failed to load sweets');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [pagination.page, pagination.limit]);
+    },
+    [pagination.page, pagination.limit]
+  );
 
   useEffect(() => {
     fetchSweets(searchParams);
@@ -50,17 +63,17 @@ const Dashboard: React.FC = () => {
 
   const handleSearch = (params: SearchParams) => {
     setSearchParams(params);
-    setPagination(prev => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  const handlePurchase = async (id: string) => {
+  const handlePurchase = async (id: number) => {
     setPurchasingId(id);
     try {
       await apiService.purchaseSweet(id, 1);
-      toast.success('Purchase successful!');
+      toast.success("Purchase successful!");
       fetchSweets(searchParams);
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Purchase failed';
+      const message = error.response?.data?.message || "Purchase failed";
       toast.error(message);
     } finally {
       setPurchasingId(null);
@@ -68,22 +81,34 @@ const Dashboard: React.FC = () => {
   };
 
   const handlePageChange = (newPage: number) => {
-    setPagination(prev => ({ ...prev, page: newPage }));
+    setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
   // Calculate stats
-  const totalSweets = sweets.length;
-  const inStock = sweets.filter(s => s.quantity > 0).length;
-  const outOfStock = sweets.filter(s => s.quantity === 0).length;
-  const lowStock = sweets.filter(s => s.quantity > 0 && s.quantity <= 5).length;
+  const inStock = sweets.filter((s) => s.quantity > 0).length;
+  const outOfStock = sweets.filter((s) => s.quantity === 0).length;
+  const lowStock = sweets.filter(
+    (s) => s.quantity > 0 && s.quantity <= 5
+  ).length;
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <div>
           <h1 className="page-title">Welcome back, {user?.name}! 🍬</h1>
-          <p className="page-subtitle">Browse and purchase your favorite sweets</p>
+          <p className="page-subtitle">
+            Browse and purchase your favorite sweets
+          </p>
         </div>
+        {user?.role === "admin" && (
+          <button
+            className="btn btn-primary add-sweet-btn"
+            onClick={() => navigate("/add-sweet")}
+          >
+            <Plus size={20} />
+            Add New Sweet
+          </button>
+        )}
       </div>
 
       <div className="stats-grid">
@@ -143,10 +168,10 @@ const Dashboard: React.FC = () => {
           <div className="sweets-grid grid grid-cols-4">
             {sweets.map((sweet) => (
               <SweetCard
-                key={sweet._id}
+                key={sweet.id}
                 sweet={sweet}
                 onPurchase={handlePurchase}
-                isPurchasing={purchasingId === sweet._id}
+                isPurchasing={purchasingId === sweet.id}
               />
             ))}
           </div>

@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Sweet } from '../types';
-import apiService from '../services/api';
-import { useAuth } from '../context/AuthContext';
-import { 
-  Shield, 
-  Package, 
-  Trash2, 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Sweet } from "../types";
+import apiService from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import {
+  Shield,
+  Package,
+  Trash2,
   RefreshCw,
   AlertTriangle,
   Check,
-  X
-} from 'lucide-react';
-import toast from 'react-hot-toast';
-import './AdminPanel.css';
+  X,
+  Plus,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import "./AdminPanel.css";
 
 const AdminPanel: React.FC = () => {
+  const navigate = useNavigate();
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSweet, setSelectedSweet] = useState<Sweet | null>(null);
@@ -34,7 +37,7 @@ const AdminPanel: React.FC = () => {
       const response = await apiService.getAllSweets(1, 100);
       setSweets(response.sweets);
     } catch (error) {
-      toast.error('Failed to load sweets');
+      toast.error("Failed to load sweets");
     } finally {
       setIsLoading(false);
     }
@@ -44,12 +47,12 @@ const AdminPanel: React.FC = () => {
     if (!selectedSweet) return;
     setIsProcessing(true);
     try {
-      await apiService.restockSweet(selectedSweet._id, restockAmount);
+      await apiService.restockSweet(selectedSweet.id, restockAmount);
       toast.success(`Added ${restockAmount} units to ${selectedSweet.name}`);
       setShowRestockModal(false);
       fetchAllSweets();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Restock failed');
+      toast.error(error.response?.data?.message || "Restock failed");
     } finally {
       setIsProcessing(false);
     }
@@ -59,12 +62,12 @@ const AdminPanel: React.FC = () => {
     if (!selectedSweet) return;
     setIsProcessing(true);
     try {
-      await apiService.deleteSweet(selectedSweet._id);
+      await apiService.deleteSweet(selectedSweet.id);
       toast.success(`${selectedSweet.name} deleted`);
       setShowDeleteModal(false);
       fetchAllSweets();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Delete failed');
+      toast.error(error.response?.data?.message || "Delete failed");
     } finally {
       setIsProcessing(false);
     }
@@ -83,9 +86,11 @@ const AdminPanel: React.FC = () => {
 
   // Stats
   const totalSweets = sweets.length;
-  const outOfStock = sweets.filter(s => s.quantity === 0).length;
-  const lowStock = sweets.filter(s => s.quantity > 0 && s.quantity <= 5).length;
-  const totalValue = sweets.reduce((sum, s) => sum + (s.price * s.quantity), 0);
+  const outOfStock = sweets.filter((s) => s.quantity === 0).length;
+  const lowStock = sweets.filter(
+    (s) => s.quantity > 0 && s.quantity <= 5
+  ).length;
+  const totalValue = sweets.reduce((sum, s) => sum + s.price * s.quantity, 0);
 
   if (isLoading) {
     return (
@@ -106,8 +111,17 @@ const AdminPanel: React.FC = () => {
             <p>Manage sweets inventory and stock levels</p>
           </div>
         </div>
-        <div className="admin-user">
-          Logged in as <strong>{user?.name}</strong>
+        <div className="admin-header-actions">
+          <button
+            className="btn btn-primary add-sweet-btn"
+            onClick={() => navigate("/add-sweet")}
+          >
+            <Plus size={20} />
+            Add New Sweet
+          </button>
+          <div className="admin-user">
+            Logged in as <strong>{user?.name}</strong>
+          </div>
         </div>
       </div>
 
@@ -136,7 +150,7 @@ const AdminPanel: React.FC = () => {
         <div className="admin-stat success">
           <Check size={24} />
           <div>
-            <span className="stat-number">${totalValue.toFixed(2)}</span>
+            <span className="stat-number">₹{totalValue.toFixed(2)}</span>
             <span className="stat-text">Inventory Value</span>
           </div>
         </div>
@@ -155,16 +169,20 @@ const AdminPanel: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {sweets.map(sweet => {
+            {sweets.map((sweet) => {
               const isOut = sweet.quantity === 0;
               const isLow = sweet.quantity > 0 && sweet.quantity <= 5;
-              
+
               return (
-                <tr key={sweet._id} className={isOut ? 'out-of-stock' : ''}>
+                <tr key={sweet.id} className={isOut ? "out-of-stock" : ""}>
                   <td className="cell-name">{sweet.name}</td>
                   <td>{sweet.category}</td>
                   <td>${sweet.price.toFixed(2)}</td>
-                  <td className={isOut ? 'text-danger' : isLow ? 'text-warning' : ''}>
+                  <td
+                    className={
+                      isOut ? "text-danger" : isLow ? "text-warning" : ""
+                    }
+                  >
                     {sweet.quantity}
                   </td>
                   <td>
@@ -201,17 +219,25 @@ const AdminPanel: React.FC = () => {
 
       {/* Restock Modal */}
       {showRestockModal && selectedSweet && (
-        <div className="modal-overlay" onClick={() => setShowRestockModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowRestockModal(false)}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Restock {selectedSweet.name}</h3>
-            <p>Current stock: <strong>{selectedSweet.quantity}</strong></p>
+            <p>
+              Current stock: <strong>{selectedSweet.quantity}</strong>
+            </p>
             <div className="form-group">
               <label className="form-label">Add quantity:</label>
               <input
                 type="number"
                 min="1"
+                placeholder="Enter quantity"
                 value={restockAmount}
-                onChange={e => setRestockAmount(parseInt(e.target.value) || 0)}
+                onChange={(e) =>
+                  setRestockAmount(parseInt(e.target.value) || 0)
+                }
                 className="form-input"
               />
             </div>
@@ -228,7 +254,7 @@ const AdminPanel: React.FC = () => {
                 onClick={handleRestock}
                 disabled={isProcessing || restockAmount < 1}
               >
-                {isProcessing ? 'Processing...' : `Add ${restockAmount} units`}
+                {isProcessing ? "Processing..." : `Add ${restockAmount} units`}
               </button>
             </div>
           </div>
@@ -237,10 +263,16 @@ const AdminPanel: React.FC = () => {
 
       {/* Delete Modal */}
       {showDeleteModal && selectedSweet && (
-        <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowDeleteModal(false)}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Delete {selectedSweet.name}?</h3>
-            <p>This action cannot be undone. The sweet will be permanently removed.</p>
+            <p>
+              This action cannot be undone. The sweet will be permanently
+              removed.
+            </p>
             <div className="modal-actions">
               <button
                 className="btn btn-secondary"
@@ -254,7 +286,7 @@ const AdminPanel: React.FC = () => {
                 onClick={handleDelete}
                 disabled={isProcessing}
               >
-                {isProcessing ? 'Deleting...' : 'Delete'}
+                {isProcessing ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
