@@ -1,0 +1,194 @@
+.admin-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-title svg {
+  color: var(--primary-color);
+}
+
+.admin-title h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-title p {
+  color: var(--text-secondary);
+}
+
+.admin-user {
+  background: var(--card-background);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-stat {
+  background: var(--card-background);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.admin-stat svg {
+  color: var(--primary-color);
+}
+
+.admin-stat.warning svg {
+  color: var(--warning-color);
+}
+
+.admin-stat.danger svg {
+  color: var(--danger-color);
+}
+
+.admin-stat.success svg {
+  color: var(--success-color);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Table */
+.admin-table-container {
+  background: var(--card-background);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background: var(--background-color);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.admin-table tr:hover {
+  background-color: var(--background-color);
+}
+
+.admin-table tr.out-of-stock {
+  opacity: 0.6;
+}
+
+.cell-name {
+  font-weight: 500;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cell-actions .btn-sm {
+  padding: 0.5rem;
+}
+
+.text-danger {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
+.text-warning {
+  color: var(--warning-color);
+  font-weight: 600;
+}
+
+/* Modal (shared with SweetDetails) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--card-background);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .admin-table-container {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    min-width: 600px;
+  }
+}

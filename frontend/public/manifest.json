@@ -1,0 +1,9 @@
+{
+  "short_name": "Sweet Shop",
+  "name": "Sweet Shop Management System",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ec4899",
+  "background_color": "#ffffff"
+}
